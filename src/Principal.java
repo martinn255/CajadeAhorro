@@ -5,19 +5,21 @@ public class Principal {
     public static void main(String[] args){
         CajaAhorro n = new CajaAhorro();
         CajaAhorro n2 = new CajaAhorro();
-        CajaAhorro n3 = new CajaAhorro();
-        double val,val2,val3,nuevo;
+        //CajaAhorro n3 = new CajaAhorro();
+        double val,depo,extra;
+        //double val2,val3;
         Scanner teclado = new Scanner(System.in);
-        int opc;
+        int opc,cant;
         
         n.setSaldo(50);
         n2.setSaldo(-70);
         
         val = n.getSaldoActual();//saldo correcto
-        val2 = n2.getSaldoActual();//saldo incorrecto
-        val3 = n3.getSaldoActual();//saldo default
+       // val2 = n2.getSaldoActual();//saldo incorrecto
+        //val3 = n3.getSaldoActual();//saldo default
 
         System.out.println(val);
+        System.out.println(n.getCantEx());
         //System.out.println(val2);
         //System.out.println(val3);
         do{
@@ -34,18 +36,26 @@ public class Principal {
                 case 1:
                 System.out.println("-----------------------------------");
                 System.out.println("Ingrese Valor a Depositar");
-                nuevo = teclado.nextDouble();
-                n.Deposito(nuevo);
+                depo = teclado.nextDouble();
+                n.Deposito(depo);
                 break;
-                /*case 2:
-                break;*/
+                case 2:
+                System.out.println("-----------------------------------");
+                System.out.println("Ingrese valor a Extraer");
+                extra = teclado.nextDouble();
+                n.Extraccion(extra);
+                cant = n.getCantMaxEx() - n.getCantEx();
+                System.out.println("Cantidad de Extracciones Disponibles: " + cant);
+                break;
                 case 3:
                 System.out.println("-----------------------------------");
+                System.out.println("El Saldo Actual es: ");
                 val = n.getSaldoActual();
                 System.out.println(val);
                 break;
             }
-            
+
         } while(opc!=0);
+        teclado.close();
     }
 }

@@ -1,0 +1,63 @@
+list calcularAFND2AFD(A) {
+
+    /* Descomposición de la lista A en sus cinco componentes */
+    set Q = A[0];
+    set SIGMA = A[1];
+    list DELTA = A[2];
+    element q0 = A[3];
+    set F = A[4];
+
+    set nuevosEstados = {};
+    list nuevasTransiciones = [];
+    list mapa = [];            /* lista de pares [subconjunto, nombre] */
+    list cola = [];
+
+    /* Estado inicial del AFD a partir de {q0} del AFND */
+    set subconjuntoInicial = {q0};
+    element nombreInicial = generarNombre(#nuevosEstados);
+
+    mapa = agregar(mapa, [subconjuntoInicial, nombreInicial]);
+    nuevosEstados = nuevosEstados + {nombreInicial};
+    cola = agregar(cola, subconjuntoInicial);
+
+    while (#cola != 0) {
+
+        set subconjuntoActual = primero(cola);
+        cola = resto(cola);
+        element origen = buscarNombre(mapa, subconjuntoActual);
+
+        for s in SIGMA {
+
+            set destino = {};
+
+            for q in subconjuntoActual {
+                destino = destino + transicion(DELTA, q, s);
+            }
+
+            if (#destino != 0) {
+
+                if (noEstaEnMapa(mapa, destino)) {
+                    element nuevoNombre = generarNombre(#nuevosEstados);
+                    mapa = agregar(mapa, [destino, nuevoNombre]);
+                    nuevosEstados = nuevosEstados + {nuevoNombre};
+                    cola = agregar(cola, destino);
+                }
+
+                element nombreDestino = buscarNombre(mapa, destino);
+                nuevasTransiciones = agregar(nuevasTransiciones, [origen, s, nombreDestino]);
+            }
+        }
+    }
+
+    /* Marcar estados finales del AFD */
+    set nuevosFinales = {};
+
+    for par in mapa {
+        set S = primero(par);
+        if (#(S ++ F) != 0) {
+            nuevosFinales = nuevosFinales + {segundo(par)};
+        }
+    }
+
+    return [nuevosEstados, SIGMA, nuevasTransiciones, nombreInicial, nuevosFinales];
+}
